@@ -15,214 +15,55 @@ import { PropertiesPanel } from './components/PropertiesPanel';
 import { BackgroundModal } from './components/BackgroundModal';
 import { BOMModal } from './components/BOMModal';
 import { ExportModal } from './components/ExportModal';
-import { SAMPLE_PLANS } from './data/samplePlans';
+import { DEFAULT_PROJECT } from './data/defaultProject';
 
-// Initial preloaded devices on Corporate Office plan
-const initialDevices: DeviceNode[] = [
-  {
-    id: 'dev-router-1',
-    type: 'router_core',
-    name: 'Router Gateway Core',
-    category: 'network',
-    icon: 'Router',
-    x: 130,
-    y: 190,
-    ip: '192.168.1.1',
-    mac: 'E4:8D:8C:01:23:45',
-    vlan: 'VLAN 1 - Default',
-    model: 'Enterprise Core Router',
-    status: 'online',
-    color: '#0284c7',
-  },
-  {
-    id: 'dev-switch-1',
-    type: 'switch_poe',
-    name: 'Switch PoE+ 24P (MDF)',
-    category: 'network',
-    icon: 'Boxes',
-    x: 230,
-    y: 190,
-    ip: '192.168.1.2',
-    mac: 'E4:8D:8C:01:23:46',
-    vlan: 'VLAN 10 - Infraestructura',
-    model: 'Switch L2+ 370W PoE',
-    status: 'online',
-    color: '#7c3aed',
-  },
-  {
-    id: 'dev-server-1',
-    type: 'server_blade',
-    name: 'Servidor VM Host 01',
-    category: 'servers',
-    icon: 'HardDrive',
-    x: 130,
-    y: 110,
-    ip: '192.168.1.10',
-    mac: 'E4:8D:8C:01:23:99',
-    vlan: 'VLAN 20 - Servidores',
-    model: 'PowerEdge 2U',
-    status: 'online',
-    color: '#3b82f6',
-  },
-  {
-    id: 'dev-ap-1',
-    type: 'ap_indoor',
-    name: 'AP Wi-Fi 6 (Juntas)',
-    category: 'wireless',
-    icon: 'Wifi',
-    x: 580,
-    y: 170,
-    ip: '192.168.1.20',
-    mac: 'A0:B1:C2:33:44:55',
-    vlan: 'VLAN 30 - Wi-Fi Corporativo',
-    model: 'UniFi U6 Pro',
-    status: 'online',
-    color: '#06b6d4',
-    coverageRadius: 240,
-  },
-  {
-    id: 'dev-pc-1',
-    type: 'pc_desktop',
-    name: 'PC Operativa 01',
-    category: 'computers',
-    icon: 'Monitor',
-    x: 190,
-    y: 410,
-    ip: '192.168.1.101',
-    mac: '10:7C:61:A1:B2:C3',
-    vlan: 'VLAN 40 - Usuarios',
-    model: 'Dell OptiPlex 7090',
-    status: 'online',
-    color: '#0ea5e9',
-  },
-  {
-    id: 'dev-pc-2',
-    type: 'laptop',
-    name: 'Laptop Gerencia',
-    category: 'computers',
-    icon: 'Laptop',
-    x: 980,
-    y: 170,
-    ip: '192.168.1.102',
-    mac: '3C:06:30:D4:E5:F6',
-    vlan: 'VLAN 40 - Usuarios',
-    model: 'ThinkPad X1 Carbon',
-    status: 'online',
-    color: '#38bdf8',
-  },
-  {
-    id: 'dev-cam-1',
-    type: 'cctv_dome',
-    name: 'Cámara Acceso Principal',
-    category: 'cctv',
-    icon: 'Camera',
-    x: 1280,
-    y: 390,
-    ip: '192.168.1.50',
-    mac: '70:B3:D5:12:34:56',
-    vlan: 'VLAN 50 - CCTV',
-    model: 'Hikvision 4K IP Dome',
-    status: 'online',
-    color: '#f59e0b',
-    cameraAngle: 125,
-    cameraFOV: 85,
-    cameraDistance: 190,
-  },
-  {
-    id: 'dev-iot-1',
-    type: 'sensor_motion',
-    name: 'Sensor PIR Pasillo',
-    category: 'iot',
-    icon: 'Activity',
-    x: 620,
-    y: 320,
-    ip: '192.168.1.80',
-    mac: '54:48:E6:AA:BB:CC',
-    vlan: 'VLAN 60 - IoT',
-    model: 'Zigbee Motion Sensor',
-    status: 'online',
-    color: '#059669',
-    cameraAngle: 90,
-    cameraFOV: 90,
-    cameraDistance: 130,
-  },
-];
-
-// Initial preloaded cables
-const initialCables: CableConnection[] = [
-  {
-    id: 'cable-1',
-    fromId: 'dev-router-1',
-    toId: 'dev-switch-1',
-    type: 'cat6',
-    label: 'Troncal 10G',
-  },
-  {
-    id: 'cable-2',
-    fromId: 'dev-switch-1',
-    toId: 'dev-server-1',
-    type: 'fiber',
-    label: 'OM3 Fibra',
-    curvature: -0.5,
-  },
-  {
-    id: 'cable-3',
-    fromId: 'dev-switch-1',
-    toId: 'dev-ap-1',
-    type: 'poe',
-    label: 'PoE+ Datos',
-    curvature: 0.3,
-  },
-  {
-    id: 'cable-4',
-    fromId: 'dev-switch-1',
-    toId: 'dev-pc-1',
-    type: 'cat6',
-    label: 'Cat6 Puesto 1',
-    curvature: 0.2,
-  },
-  {
-    id: 'cable-5',
-    fromId: 'dev-switch-1',
-    toId: 'dev-cam-1',
-    type: 'poe',
-    label: 'PoE+ CCTV',
-    curvature: -0.4,
-  },
-  {
-    id: 'cable-6',
-    fromId: 'dev-ap-1',
-    toId: 'dev-pc-2',
-    type: 'wifi',
-    label: 'Wi-Fi 6',
-  },
-];
+const PROJECT_STORAGE_VERSION = 'netplan_v3_uploaded_project';
 
 export function App() {
-  const [projectName, setProjectName] = useState<string>('Proyecto Red Corporativa');
+  const [projectName, setProjectName] = useState<string>(() => {
+    const version = localStorage.getItem('netplan_version');
+    if (version !== PROJECT_STORAGE_VERSION) {
+      return DEFAULT_PROJECT.projectName || 'Proyecto Red Corporativa';
+    }
+    const saved = localStorage.getItem('netplan_name');
+    return saved || DEFAULT_PROJECT.projectName;
+  });
+
   const [devices, setDevices] = useState<DeviceNode[]>(() => {
+    const version = localStorage.getItem('netplan_version');
+    if (version !== PROJECT_STORAGE_VERSION) {
+      return DEFAULT_PROJECT.devices;
+    }
     const saved = localStorage.getItem('netplan_devices');
-    return saved ? JSON.parse(saved) : initialDevices;
+    return saved ? JSON.parse(saved) : DEFAULT_PROJECT.devices;
   });
+
   const [cables, setCables] = useState<CableConnection[]>(() => {
+    const version = localStorage.getItem('netplan_version');
+    if (version !== PROJECT_STORAGE_VERSION) {
+      return DEFAULT_PROJECT.cables;
+    }
     const saved = localStorage.getItem('netplan_cables');
-    return saved ? JSON.parse(saved) : initialCables;
+    return saved ? JSON.parse(saved) : DEFAULT_PROJECT.cables;
   });
+
   const [background, setBackground] = useState<FloorPlanBackground>(() => {
-    const defaultSample = SAMPLE_PLANS[0];
-    return {
-      imageSrc: defaultSample.imageSrc,
-      name: defaultSample.name,
-      opacity: 0.85,
-      x: 0,
-      y: 0,
-      scale: 1,
-      width: 1400,
-      height: 900,
-      locked: true,
-    };
+    const version = localStorage.getItem('netplan_version');
+    if (version !== PROJECT_STORAGE_VERSION) {
+      return DEFAULT_PROJECT.background;
+    }
+    const saved = localStorage.getItem('netplan_background');
+    return saved ? JSON.parse(saved) : DEFAULT_PROJECT.background;
   });
-  const [scale, setScale] = useState<ScaleConfig>({ pixelsPerMeter: 20, unit: 'm' });
+
+  const [scale, setScale] = useState<ScaleConfig>(() => {
+    const version = localStorage.getItem('netplan_version');
+    if (version !== PROJECT_STORAGE_VERSION) {
+      return DEFAULT_PROJECT.scale || { pixelsPerMeter: 20, unit: 'm' };
+    }
+    const saved = localStorage.getItem('netplan_scale');
+    return saved ? JSON.parse(saved) : DEFAULT_PROJECT.scale || { pixelsPerMeter: 20, unit: 'm' };
+  });
 
   // UI state
   const [activeTool, setActiveTool] = useState<'select' | 'cable' | 'pan'>('select');
@@ -245,12 +86,13 @@ export function App() {
 
   // Auto-save to localStorage
   useEffect(() => {
+    localStorage.setItem('netplan_version', PROJECT_STORAGE_VERSION);
     localStorage.setItem('netplan_devices', JSON.stringify(devices));
-  }, [devices]);
-
-  useEffect(() => {
     localStorage.setItem('netplan_cables', JSON.stringify(cables));
-  }, [cables]);
+    localStorage.setItem('netplan_background', JSON.stringify(background));
+    localStorage.setItem('netplan_scale', JSON.stringify(scale));
+    localStorage.setItem('netplan_name', projectName);
+  }, [devices, cables, background, scale, projectName]);
 
   // Keyboard shortcuts
   useEffect(() => {

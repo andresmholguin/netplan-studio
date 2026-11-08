@@ -57,8 +57,8 @@ export const Canvas: React.FC<CanvasProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Pan & Zoom state
-  const [pan, setPan] = useState<{ x: number; y: number }>({ x: 50, y: 50 });
-  const [zoom, setZoom] = useState<number>(1);
+  const [pan, setPan] = useState<{ x: number; y: number }>({ x: 160, y: 30 });
+  const [zoom, setZoom] = useState<number>(0.55);
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
@@ -238,8 +238,8 @@ export const Canvas: React.FC<CanvasProps> = ({
         <span className="text-slate-600">|</span>
         <button
           onClick={() => {
-            setZoom(1);
-            setPan({ x: 50, y: 50 });
+            setZoom(0.55);
+            setPan({ x: 160, y: 30 });
           }}
           className="text-blue-400 hover:text-blue-300 transition cursor-pointer"
         >
